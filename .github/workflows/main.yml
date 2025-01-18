@@ -26,8 +26,8 @@ jobs:
       - name: Deploy to DigitalOcean
         uses: appleboy/ssh-action@v0.1.6
         with:
-          host: your-server-ip
-          username: your-username
+          host: 209.38.251.202
+          username: root
           key: ${{ secrets.DO_SSH_KEY }}
           script: |
             cd /path/to/your/app
