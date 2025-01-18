@@ -30,6 +30,7 @@ jobs:
           username: root
           key: ${{ secrets.DO_SSH_KEY }}
           script: |
+            rm -f /my-strapi-app/.env
             # Set environment variables for Strapi
             echo "APP_KEYS=${{ secrets.APP_KEYS }}" >> /root/my-strapi-app/.env
             echo "ADMIN_JWT_SECRET=${{ secrets.ADMIN_JWT_SECRET }}" >> /root/my-strapi-app/.env
