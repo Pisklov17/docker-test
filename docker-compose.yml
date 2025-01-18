@@ -8,6 +8,8 @@ services:
     volumes:
       - /root/my-strapi-app:/root/my-strapi-app
       - /root/my-strapi-app/public:/root/my-strapi-app/public
+    env_file:
+      - /root/my-strapi-app/.env
     environment:
       - NODE_ENV=production
       - DATABASE_CLIENT=sqlite
