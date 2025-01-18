@@ -50,5 +50,3 @@ jobs:
             pm2 restart all
             docker-compose down
             docker-compose up -d
-
-
