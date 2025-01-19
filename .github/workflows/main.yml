@@ -23,15 +23,15 @@ jobs:
           yarn install
           yarn run build
 
-      - name: Deploy to DigitalOcean
+    - name: Deploy to DigitalOcean
         uses: appleboy/ssh-action@v0.1.6
         with:
           host: 209.38.251.202
           username: root
           key: ${{ secrets.DO_SSH_KEY }}
           script: |
+            # Set up environment variables
             rm -f /root/my-strapi-app/.env
-            # Set environment variables for Strapi
             echo "APP_KEYS=${{ secrets.APP_KEYS }}" >> /root/my-strapi-app/.env
             echo "ADMIN_JWT_SECRET=${{ secrets.ADMIN_JWT_SECRET }}" >> /root/my-strapi-app/.env
             echo "JWT_SECRET=${{ secrets.JWT_SECRET }}" >> /root/my-strapi-app/.env
@@ -46,10 +46,14 @@ jobs:
             echo "TRANSFER_TOKEN_SALT=${{ secrets.TRANSFER_TOKEN_SALT }}" >> /root/my-strapi-app/.env
             echo "API_TOKEN_SALT=${{ secrets.API_TOKEN_SALT }}" >> /root/my-strapi-app/.env
 
-            # Pull latest changes and restart Strapi app
+            # Clean up and rebuild Strapi
             cd /root/my-strapi-app
+            rm -rf .cache build
             git pull origin main
             yarn install --production
-            pm2 restart all
+            yarn run build
+
+            # Restart Docker
             docker-compose down
+            docker-compose --env-file /root/my-strapi-app/.env build --no-cache
             docker-compose --env-file /root/my-strapi-app/.env up -d
